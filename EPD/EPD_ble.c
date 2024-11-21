@@ -110,8 +110,8 @@ static void epd_service_process(ble_epd_t * p_epd, uint8_t * p_data, uint16_t le
 {
     if (p_data == NULL || length <= 0) return;
     NRF_LOG_PRINTF("[EPD]: CMD=0x%02x, LEN=%d\n", p_data[0], length);
-
-    uint32_t    err_code;
+    
+    uint32_t err_code;
 
     switch (p_data[0])
     {

@@ -1,0 +1,70 @@
+Language: Cpp
+# 基础风格
+BasedOnStyle: LLVM
+UseTab: Never
+IndentWidth: 4
+TabWidth: 4
+ColumnLimit: 100
+MaxEmptyLinesToKeep: 1
+
+# 缩进设置
+IndentCaseLabels: false
+IndentPPDirectives: None
+IndentWrappedFunctionNames: false
+NamespaceIndentation: None
+
+# 大括号设置
+BreakBeforeBraces: Linux
+BraceWrapping:
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: true
+  AfterStruct: false
+  BeforeElse: false
+
+# 空格设置
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# 对齐设置
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Left
+AlignOperands: true
+AlignTrailingComments: true
+
+# 函数设置
+AllowAllParametersOfDeclarationOnNextLine: false
+BinPackArguments: false
+BinPackParameters: false
+
+# 续行设置
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+ContinuationIndentWidth: 4
+
+# 其他格式设置
+KeepEmptyLinesAtTheStartOfBlocks: false
+ReflowComments: false
+SortIncludes: true
+SpacesBeforeTrailingComments: 4
+
+# 短语句设置
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+# 指针对齐
+PointerAlignment: Right
+
+# 预处理器设置
+MacroBlockBegin: ''
+MacroBlockEnd: ''
