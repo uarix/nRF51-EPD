@@ -325,6 +325,9 @@ static uint32_t epd_service_init(ble_epd_t * p_epd)
 
 static void epd_config_init(ble_epd_t * p_epd)
 {
+    p_epd->config.wakeup_pin = WAKEUP_PIN;
+    p_epd->config.led_pin = LED_PIN;
+
     bool save_config = false;
     if (p_epd->config.mosi_pin == 0xFF && p_epd->config.sclk_pin == 0xFF &&
         p_epd->config.cs_pin == 0xFF && p_epd->config.dc_pin == 0xFF &&

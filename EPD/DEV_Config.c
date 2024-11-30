@@ -26,6 +26,9 @@ uint32_t EPD_RST_PIN = 11;
 uint32_t EPD_BUSY_PIN = 12;
 uint32_t EPD_BS_PIN = 13;
 
+uint32_t WAKEUP_PIN = 7;
+uint32_t LED_PIN = 0xFF; // Not set
+
 static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(0);
 
 /******************************************************************************

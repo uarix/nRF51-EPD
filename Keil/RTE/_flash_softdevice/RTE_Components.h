@@ -1,6 +1,6 @@
 
 /*
- * Auto generated Run-Time-Environment Configuration File
+ * Auto generated Run-Time-Environment Component Configuration File
  *      *** Do not modify ! ***
  *
  * Project: 'EPD' 
@@ -15,7 +15,6 @@
  * Define the Device Header File: 
  */
 #define CMSIS_device_header "nrf.h"
-
 
 
 #endif /* RTE_COMPONENTS_H */

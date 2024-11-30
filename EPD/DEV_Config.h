@@ -34,6 +34,9 @@ extern uint32_t EPD_RST_PIN;
 extern uint32_t EPD_BUSY_PIN;
 extern uint32_t EPD_BS_PIN;
 
+extern uint32_t WAKEUP_PIN;
+extern uint32_t LED_PIN;
+
 /**
  * GPIO read and write
 **/
