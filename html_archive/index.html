@@ -1,0 +1,125 @@
+<html>
+
+<head>
+	<title>4.2 寸电子墨水屏蓝牙控制器</title>
+	<style type="text/css">
+		.main { width: 800px; margin: 0 auto;}
+		h3 { padding-bottom: .3em; border-bottom: 1px solid #CCC; }
+		fieldset { border: 2px dotted #AAA; padding: 10px; margin-bottom: 10px; }
+		fieldset legend { font-weight: bold; }
+		code { padding: .2em .4em; margin: 0; font-size: 85%; background: #CCC; border-radius: 3px; }
+
+		#toolbar { margin-bottom: 10px; border-bottom: 1px dotted #AAA;}
+		#status { margin: 10px 0; }
+		#filebox { margin-bottom: 10px; }
+		#cmdIMAGE { width: 350px; height: 300px; float: right}
+		#log { width: 100%; min-height: 200px; margin-top: 10px; background: #DDD; }
+		#canvas-box { margin-top: 10px; }
+	</style>
+</head>
+
+<body>
+	<div class="main">
+		<h3>4.2 寸电子墨水屏蓝牙控制器（nRF51）</h3>
+		<fieldset>
+			<legend>蓝牙</legend>
+			<div style="float: right;">
+				驱动:
+				<select id="epddriver">
+					<option value="01">EPD_4in2</option>
+					<option value="02">EPD_4in2_V2</option>
+					<option value="03">EPD_4in2b_V2</option>
+				</select>
+				引脚:
+				<input id="epdpins" type="text" value="">
+				<button id="setDriverbutton" type="button" onclick="setDriver();">确认</button>
+			</div>
+			<button id="connectbutton" type="button" onclick="preConnect();">连接</button>
+			<button type="button" onclick="reConnect();">重连</button>
+		</fieldset>
+
+		<fieldset>
+			<legend>传图</legend>
+			<div id="toolbar">
+				<div style="float: right">
+					<button id="clearscreenbutton" type="button" onclick="clearscreen();">清除屏幕</button>
+					<input type="text" id="cmdTXT" value="">
+					<button id="sendcmdbutton" type="button" onclick="sendcmd(document.getElementById(&quot;cmdTXT&quot;).value);">发送命令</button>
+				</div>
+				<div style="margin-bottom: 10px;">
+					<button id="clearscreenbutton" type="button" onclick="clear_canvas();">清除画布</button>
+					<button id="sendimgbutton" type="button" onclick="sendimg(document.getElementById(&quot;cmdIMAGE&quot;).value);">发送图片</button>
+					<span id="status"></span>
+				</div>
+			</div>
+			<div id="sendimg">
+				<div id="filebox">
+					<input type="file" id="image_file" onchange="update_image()" accept=".png,.jpg,.bmp,.webp,.jpeg">
+					抖动算法：
+					<select id="dithering" title="抖动算法" onchange="update_image()">
+						<optgroup label="黑白">
+							<option value="none">二值化</option>
+							<option value="bayer">bayer</option>
+							<option value="floydsteinberg">floydsteinberg</option>
+							<option value="Atkinson">Atkinson</option>
+						</optgroup>
+						<optgroup label="黑白红多色">
+							<option value="bwr_floydsteinberg">黑白红floydsteinberg</option>
+							<option value="bwr_Atkinson">黑白红Atkinson</option>
+						</optgroup>
+					</select>
+					阈值:
+					<input type="number" max="255" min="0" value="125" id="threshold" onchange="update_image()">
+				</div>
+				<textarea id="cmdIMAGE"></textarea>
+				<canvas id="canvas" width="400" height="300" style="border: black solid 1px;"></canvas>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>日志</legend>
+			<button type="button" onclick="document.getElementById('log').innerHTML = '';">清空日志</button>
+			<div id="log"></div>
+		</fieldset>
+		<fieldset>
+			<legend>提示</legend>
+			<ul>
+				<li><b>驱动选择：</b>黑白屏可尝试 EPD_4in2 / EPD_4in2_V2, 三色屏选择 EPD_4in2b_V2 (选错驱动可能会导致任何未知的异常，重启即可恢复）</li>
+				<li><b>引脚配置：</b>格式为十六进制，顺序：MOSI/SCLK/CS/DC/ST/BUSY/BS，必须按此顺序包含完整的 7 个引脚配置（没有用到的引脚可配置为 <code>FF</code>）</li>
+				<li>
+					<b>指令列表（指令和参数全部要使用十六进制）：</b>
+					<ul>
+						<li>驱动相关：
+							<ul>
+								<li><code>00</code>+<code>引脚配置</code>: 设置引脚映射（见上面引脚配置）</li>
+								<li><code>01</code>+<code>驱动 ID</code>: 驱动初始化（支持的驱动 ID: <code>01</code>/<code>02</code>/<code>03</code>）</li>
+								<li><code>02</code>: 清空屏幕（把屏幕刷为白色）</li>
+								<li><code>03</code>+<code>命令</code>: 发送命令到屏幕（请参考屏幕主控手册）</li>
+								<li><code>04</code>+<code>数据</code>: 写入数据到屏幕内存（同上）</li>
+								<li><code>05</code>: 刷新屏幕（显示已写入屏幕内存的数据）</li>
+								<li><code>06</code>: 屏幕睡眠</li>
+							</ul>
+						</li>
+						<li>系统相关：
+							<ul>
+								<li><code>90</code>+<code>配置</code>: 写入配置信息（重启生效，格式参考源码 <code>epd_config_t</code>）</li>
+								<li><code>91</code>: 系统重启</li>
+								<li><code>92</code>: 系统睡眠</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<p>
+				系统睡眠后可通过线圈（NFC/无线充电器）唤醒（需正确配置线圈对应的引脚才有效），否则一旦系统睡眠只有重新上电才能开启蓝牙。如果价签上带有 LED，系统启动时 LED 会闪一下（需正确配置 LED 对应的引脚才有效），以便知道系统是否已经被线圈唤醒。
+			</p>
+			<p style="color: #666;">
+				<strong>致谢：</strong>屏幕驱动代码来自微雪 <a href="https://www.waveshare.net/wiki/E-Paper_Shield" target="_blank">E-Paper Shield</a>，本网页代码最初基于 <a href="https://github.com/atc1441/ATC_TLSR_Paper" target="_blank">atc1441/ATC_TLSR_Paper</a> 项目的网页控制端代码修改而来。
+			</p>
+		</fieldset>
+	</div>
+	<script type="text/javascript" src="js/dithering.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+</body>
+
+</html>
